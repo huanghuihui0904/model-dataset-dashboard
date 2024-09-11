@@ -13,20 +13,21 @@ import streamlit as st
 import requests
 import json
 
-# Your Notion API token and database ID
-NOTION_TOKEN = "secret_Jz7xY1y67hkSdP7KXRw5cd4P6CLPXa9lHaZ7kUUF6Fb"
+# Set up your API key and database ID
+NOTION_API_KEY = "secret_Jz7xY1y67hkSdP7KXRw5cd4P6CLPXa9lHaZ7kUUF6Fb"
 DATABASE_ID = "95d59953596a4574b5817f0300e9310f"
 
-# The Notion API endpoint for querying a database
-url = f"https://www.notion.so/95d59953596a4574b5817f0300e9310f?v=96774819a2324a07b0962fd68d48a219"
-# url = f"https://api.notion.com/v1/databases/{DATABASE_ID}/query"
+# Set up the API URL to query the database
+url = f"https://api.notion.com/v1/databases/{DATABASE_ID}/query"
 
-# Headers for the API request
+# Set up the headers
 headers = {
-    "Authorization": f"Bearer {NOTION_TOKEN}",
-    "Content-Type": "application/json",
-    "Notion-Version": "2022-06-28"
+    "Authorization": f"Bearer {NOTION_API_KEY}",
+    "Notion-Version": "2022-06-28",
+    "Content-Type": "application/json"
 }
+
+
 
 # Make the API request
 response = requests.post(url, headers=headers)
@@ -193,20 +194,20 @@ edited_df = st.data_editor(
     st.session_state.df,
     use_container_width=True,
     hide_index=True,
-    # column_config={
-    #     "Status": st.column_config.SelectboxColumn(
-    #         "Status",
-    #         help="Ticket status",
-    #         options=["Open", "In Progress", "Closed"],
-    #         required=True,
-    #     ),
-    #     "Priority": st.column_config.SelectboxColumn(
-    #         "Priority",
-    #         help="Priority",
-    #         options=["High", "Medium", "Low"],
-    #         required=True,
-    #     ),
-    # },
+    column_config={
+        "Status": st.column_config.SelectboxColumn(
+            "Status",
+            help="Ticket status",
+            options=["Open", "In Progress", "Closed"],
+            required=True,
+        ),
+        "Priority": st.column_config.SelectboxColumn(
+            "Priority",
+            help="Priority",
+            options=["High", "Medium", "Low"],
+            required=True,
+        ),
+    },
     # Disable editing the ID and Date Submitted columns.
     disabled=["ID"],
 )
