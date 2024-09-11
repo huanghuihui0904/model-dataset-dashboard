@@ -30,17 +30,47 @@ response = requests.post(url, headers=headers)
 # Parse and print the response
 if response.status_code == 200:
     data = response.json()
-    # Loop through the results and print relevant data
-    for result in data['results']:
-        properties = result['properties']
-        # Access each property in the table, for example 'Name', 'Result', 'Date', etc.
-        name = properties['Name']['title'][0]['text']['content'] if properties['Name']['title'] else "No Name"
-        result_value = properties['Result']['rich_text'][0]['text']['content'] if properties['Result']['rich_text'] else "No Result"
-        date = properties['Date']['date']['start'] if properties['Date']['date'] else "No Date"
-        print(f"Experiment Name: {name}")
-        print(f"Result: {result_value}")
-        print(f"Date: {date}")
-        print("---")
+
+    # Prepare lists for DataFrame columns
+    ids = []
+    issues = []
+    statuses = []
+    priorities = []
+    dates_submitted = []
+    
+    for i, row in enumerate(data['results']):
+        properties = row['properties']
+        
+        # Extract values from Notion properties
+        precision = properties['Precision']['rich_text'][0]['text']['content'] if properties['Precision']['rich_text'] else "N/A"
+        recall = properties['Recall']['rich_text'][0]['text']['content'] if properties['Recall']['rich_text'] else "N/A"
+        f1 = properties['F1']['rich_text'][0]['text']['content'] if properties['F1']['rich_text'] else "N/A"
+        auc = properties['AUC']['rich_text'][0]['text']['content'] if properties['AUC']['rich_text'] else "N/A"
+        remarks = properties['Remarks']['rich_text'][0]['text']['content'] if properties['Remarks']['rich_text'] else "N/A"
+        
+        # Concatenate all the values into a single line for the "Issue" column
+        issue = f"Precision: {precision}, Recall: {recall}, F1: {f1}, AUC: {auc}, Remarks: {remarks}"
+        
+        # Generate random status, priority, and date (or you can extract them from Notion)
+        status = random.choice(["Open", "In Progress", "Closed"])
+        priority = random.choice(["High", "Medium", "Low"])
+        date_submitted = datetime.date(2023, 6, 1) + datetime.timedelta(days=random.randint(0, 182))
+        
+        # Append the data into respective lists
+        ids.append(f"TICKET-{1100 - i}")
+        issues.append(issue)
+        statuses.append(status)
+        priorities.append(priority)
+        dates_submitted.append(date_submitted)
+
+    # Create the data dictionary
+    data = {
+        "ID": ids,
+        "Issue": issues,
+        "Status": statuses,
+        "Priority": priorities,
+        "Date Submitted": dates_submitted,
+    }
 else:
     print(f"Failed to retrieve data: {response.status_code}, {response.text}")
 
@@ -97,7 +127,7 @@ if "df" not in st.session_state:
     #         for _ in range(100)
     #     ],
     # }
-    data=data['results']
+    data=data
     df = pd.DataFrame(data)
 
     # Save the dataframe in session state (a dictionary-like object that persists across
