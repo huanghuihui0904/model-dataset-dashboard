@@ -101,11 +101,11 @@ if "df" not in st.session_state:
 st.header("Existing tickets")
 st.write(f"Number of tickets: `{len(st.session_state.df)}`")
 
-st.info(
-    "You can edit the tickets by double clicking on a cell. Note how the plots below "
-    "update automatically! You can also sort the table by clicking on the column headers.",
-    icon="✍️",
-)
+# st.info(
+#     "You can edit the tickets by double clicking on a cell. Note how the plots below "
+#     "update automatically! You can also sort the table by clicking on the column headers.",
+#     icon="✍️",
+# )
 
 # Show the tickets dataframe with `st.data_editor`. This lets the user edit the table
 # cells. The edited data is returned as a new dataframe.
