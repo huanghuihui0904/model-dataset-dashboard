@@ -60,7 +60,10 @@ if response.status_code == 200:
                 all_columns[col_name].append("N/A")
 
     # Create a DataFrame from the extracted data, maintaining the correct column order
+    
     df = pd.DataFrame(all_columns, columns=column_order)
+    df = df.sort_values(by='Index')
+    
 
     # Store the dataframe in the session state
     st.session_state.df = df
@@ -88,5 +91,5 @@ if "df" in st.session_state:
     st.session_state.edited_df = edited_df
 
     # Show only the edited DataFrame
-    st.subheader("Edited Data")
-    st.write(edited_df)
+    # st.subheader("Edited Data")
+    # st.write(edited_df)
