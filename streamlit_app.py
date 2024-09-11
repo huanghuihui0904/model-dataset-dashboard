@@ -29,18 +29,16 @@ if response.status_code == 200:
 
     # Get column order from the database properties
     first_row_properties = data['results'][0]['properties']
-    # column_order = list(first_row_properties.keys())  # Get the original column order from Notion
     column_order = list(first_row_properties.keys())[::-1]
 
     # Dynamically get column names from the database
-    all_columns = {col_name: [] for col_name in column_order}  # Initialize columns in the correct order
+    all_columns = {col_name: [] for col_name in column_order}
     
     for row in data['results']:
         properties = row['properties']
         
         for col_name in column_order:
             col_value = properties[col_name]
-            
             # Depending on the type of the property, retrieve the appropriate data
             if col_value['type'] == 'rich_text':
                 all_columns[col_name].append(col_value['rich_text'][0]['text']['content'] if col_value['rich_text'] else "N/A")
@@ -60,10 +58,8 @@ if response.status_code == 200:
                 all_columns[col_name].append("N/A")
 
     # Create a DataFrame from the extracted data, maintaining the correct column order
-    
     df = pd.DataFrame(all_columns, columns=column_order)
     df = df.sort_values(by='Index')
-    
 
     # Store the dataframe in the session state
     st.session_state.df = df
@@ -72,32 +68,51 @@ else:
     logging.error(f"Failed to retrieve data: {response.status_code}, {response.text}")
     st.write(f"Failed to retrieve data: {response.status_code}, {response.text}")
 
-# Show app title and description
+# Set up page configuration
 st.set_page_config(page_title="Model Dataset Dashboard", page_icon="📖")
-col1, col2 = st.columns(2)
-with col1:
-    st.image("smu-logo.jpg", width=300)
 
-with col2:
-    st.markdown("<br>", unsafe_allow_html=True)
-    st.image("GovTechSg_True_Inline_Logo_3_Blue.jpg", width=300)
-# st.image("smu-logo.jpg", width=50)  # Adjust the width as necessary
-st.title("Model Dataset Dashboard")
+# Sidebar navigation
+page = st.sidebar.selectbox("Select a page", ["Homepage", "Dataset"])
 
-# Show the existing dataset in a table with `st.data_editor`
-if "df" in st.session_state:
-    st.header("Dataset")
+# Homepage content
+if page == "Homepage":
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.image("smu-logo.jpg", width=300)
 
-    # Show the editable DataFrame and allow editing
-    edited_df = st.data_editor(
-        st.session_state.df,
-        use_container_width=True,
-        hide_index=True,
-    )
+    with col2:
+        st.markdown("<br>", unsafe_allow_html=True)
+        st.image("GovTechSg_True_Inline_Logo_3_Blue.jpg", width=300)
 
-    # Update the session state with the edited data
-    st.session_state.edited_df = edited_df
+    st.title("Welcome to the Model Dataset Dashboard!")
+    st.write("This is the homepage of the dashboard, where you can explore different datasets and visualizations.")
+    
+    # Add more homepage content (e.g., introductory text, links, etc.)
+    st.markdown("""
+    ### Key Features
+    - Explore datasets.
+    - Analyze data trends.
+    - View results and insights.
+    """)
 
-    # Show only the edited DataFrame
-    # st.subheader("Edited Data")
-    # st.write(edited_df)
+# Dataset page content
+elif page == "Dataset":
+    st.title("Model Dataset")
+
+    if "df" in st.session_state:
+        st.header("Dataset")
+
+        # Show the editable DataFrame and allow editing
+        edited_df = st.data_editor(
+            st.session_state.df,
+            use_container_width=True,
+            hide_index=True,
+        )
+
+        # Update the session state with the edited data
+        st.session_state.edited_df = edited_df
+
+        # Optionally show edited data
+        # st.subheader("Edited Data")
+        # st.write(edited_df)
