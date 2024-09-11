@@ -26,7 +26,7 @@ headers = {
 
 # Make the API request
 response = requests.post(url, headers=headers)
-
+data={}
 # Parse and print the response
 if response.status_code == 200:
     data = response.json()
