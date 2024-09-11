@@ -78,7 +78,7 @@ st.title("Model Dataset Dashboard")
 
 # Show the existing dataset in a table with `st.data_editor`
 if "df" in st.session_state:
-    st.header("Editable Dataset")
+    st.header("Dataset")
 
     # Show the editable DataFrame and allow editing
     edited_df = st.data_editor(
