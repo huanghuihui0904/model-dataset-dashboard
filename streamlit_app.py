@@ -69,7 +69,7 @@ else:
     st.write(f"Failed to retrieve data: {response.status_code}, {response.text}")
 
 # Set up page configuration
-st.set_page_config(page_title="Model Dataset Dashboard", page_icon="📖")
+st.set_page_config(page_title="Model Dataset Dashboard", page_icon="govtech-icon.png")
 
 # Sidebar navigation
 page = st.sidebar.selectbox("Select a page", ["Homepage", "Dataset"])
