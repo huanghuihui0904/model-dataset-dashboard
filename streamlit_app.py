@@ -1,6 +1,9 @@
 import datetime
 import random
+import logging
 
+# Configure the logging system
+logging.basicConfig(level=logging.INFO)
 import altair as alt
 import numpy as np
 import pandas as pd
@@ -71,8 +74,14 @@ if response.status_code == 200:
         "Priority": priorities,
         "Date Submitted": dates_submitted,
     }
+
+    # Convert the data into a pandas DataFrame
+    df = pd.DataFrame(data)
+
+    # Display the DataFrame
+    logging.info(df)
 else:
-    print(f"Failed to retrieve data: {response.status_code}, {response.text}")
+    logging.info(f"Failed to retrieve data: {response.status_code}, {response.text}")
 
 
 # Show app title and description.
