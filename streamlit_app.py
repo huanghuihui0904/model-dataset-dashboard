@@ -6,6 +6,45 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 
+import requests
+import json
+
+# Your Notion API token and database ID
+NOTION_TOKEN = "secret_Jz7xY1y67hkSdP7KXRw5cd4P6CLPXa9lHaZ7kUUF6Fb"
+DATABASE_ID = "95d59953596a4574b5817f0300e9310f"
+
+# The Notion API endpoint for querying a database
+url = f"https://www.notion.so/95d59953596a4574b5817f0300e9310f?v=96774819a2324a07b0962fd68d48a219"
+# url = f"https://api.notion.com/v1/databases/{DATABASE_ID}/query"
+
+# Headers for the API request
+headers = {
+    "Authorization": f"Bearer {NOTION_TOKEN}",
+    "Content-Type": "application/json",
+    "Notion-Version": "2022-06-28"
+}
+
+# Make the API request
+response = requests.post(url, headers=headers)
+
+# Parse and print the response
+if response.status_code == 200:
+    data = response.json()
+    # Loop through the results and print relevant data
+    for result in data['results']:
+        properties = result['properties']
+        # Access each property in the table, for example 'Name', 'Result', 'Date', etc.
+        name = properties['Name']['title'][0]['text']['content'] if properties['Name']['title'] else "No Name"
+        result_value = properties['Result']['rich_text'][0]['text']['content'] if properties['Result']['rich_text'] else "No Result"
+        date = properties['Date']['date']['start'] if properties['Date']['date'] else "No Date"
+        print(f"Experiment Name: {name}")
+        print(f"Result: {result_value}")
+        print(f"Date: {date}")
+        print("---")
+else:
+    print(f"Failed to retrieve data: {response.status_code}, {response.text}")
+
+
 # Show app title and description.
 st.set_page_config(page_title="Model Dataset Dashboard", page_icon="📖")
 st.title("Model Dataset Dashboard")
