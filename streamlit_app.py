@@ -7,8 +7,8 @@ import pandas as pd
 import streamlit as st
 
 # Show app title and description.
-st.set_page_config(page_title="Support tickets", page_icon="🎫")
-st.title("🎫 Support tickets")
+st.set_page_config(page_title="Model Dataset Dashboard", page_icon="📖")
+st.title("Model Dataset Dashboard")
 # st.write(
 #     """
 #     This app shows how you can build an internal tool in Streamlit. Here, we are 
@@ -98,8 +98,8 @@ if "df" not in st.session_state:
 #     st.session_state.df = pd.concat([df_new, st.session_state.df], axis=0)
 
 # Show section to view and edit existing tickets in a table.
-st.header("Existing tickets")
-st.write(f"Number of tickets: `{len(st.session_state.df)}`")
+st.header("Existing Model Dataset")
+st.write(f"Number of logs: `{len(st.session_state.df)}`")
 
 # st.info(
 #     "You can edit the tickets by double clicking on a cell. Note how the plots below "
