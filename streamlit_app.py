@@ -71,9 +71,9 @@ if response.status_code == 200:
     data = {
         "ID": ids,
         # "Issue": issues,
-        "Status": statuses,
-        "Priority": priorities,
-        "Date Submitted": dates_submitted,
+        # "Status": statuses,
+        # "Priority": priorities,
+        # "Date Submitted": dates_submitted,
     }
 
     # Convert the data into a pandas DataFrame
