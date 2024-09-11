@@ -127,7 +127,7 @@ if "df" not in st.session_state:
     #         for _ in range(100)
     #     ],
     # }
-    data=data
+    # data=data
     df = pd.DataFrame(data)
 
     # Save the dataframe in session state (a dictionary-like object that persists across
