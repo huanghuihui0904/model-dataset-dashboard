@@ -4,6 +4,7 @@ import logging
 
 # Configure the logging system
 logging.basicConfig(level=logging.INFO)
+logging.info('test log')
 import altair as alt
 import numpy as np
 import pandas as pd
