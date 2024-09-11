@@ -13,6 +13,12 @@ import streamlit as st
 import requests
 import json
 
+import requests
+import json
+import pandas as pd
+import random
+import datetime
+
 # Set up your API key and database ID
 NOTION_API_KEY = "secret_Jz7xY1y67hkSdP7KXRw5cd4P6CLPXa9lHaZ7kUUF6Fb"
 DATABASE_ID = "95d59953596a4574b5817f0300e9310f"
@@ -27,12 +33,10 @@ headers = {
     "Content-Type": "application/json"
 }
 
-
-
-# Make the API request
+# Make a POST request to query the database
 response = requests.post(url, headers=headers)
-data={}
-# Parse and print the response
+
+# Check the response status and process the results
 if response.status_code == 200:
     data = response.json()
 
@@ -71,19 +75,21 @@ if response.status_code == 200:
     # Create the data dictionary
     data = {
         "ID": ids,
-        # "Issue": issues,
-        # "Status": statuses,
-        # "Priority": priorities,
-        # "Date Submitted": dates_submitted,
+        "Issue": issues,
+        "Status": statuses,
+        "Priority": priorities,
+        "Date Submitted": dates_submitted,
     }
 
     # Convert the data into a pandas DataFrame
     df = pd.DataFrame(data)
 
     # Display the DataFrame
-    logging.info(df)
+    print(df)
+
 else:
-    logging.info(f"Failed to retrieve data: {response.status_code}, {response.text}")
+    print(f"Failed to retrieve data: {response.status_code}")
+    print(response.text)
 
 
 # Show app title and description.
