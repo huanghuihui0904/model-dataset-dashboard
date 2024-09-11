@@ -74,6 +74,14 @@ else:
 
 # Show app title and description
 st.set_page_config(page_title="Model Dataset Dashboard", page_icon="📖")
+col1, col2 = st.columns(2)
+with col1:
+    st.image("smu-logo.jpg", width=300)
+
+with col2:
+    st.markdown("<br>", unsafe_allow_html=True)
+    st.image("GovTechSg_True_Inline_Logo_3_Blue.jpg", width=300)
+# st.image("smu-logo.jpg", width=50)  # Adjust the width as necessary
 st.title("Model Dataset Dashboard")
 
 # Show the existing dataset in a table with `st.data_editor`
