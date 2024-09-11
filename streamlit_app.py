@@ -27,60 +27,42 @@ response = requests.post(url, headers=headers)
 if response.status_code == 200:
     data = response.json()
 
-    # Prepare lists for DataFrame columns
-    ids = []
-    precisions = []
-    recalls = []
-    f1_scores = []
-    aucs = []
-    remarks_list = []
-    statuses = []
-    priorities = []
-    dates_submitted = []
+    # Get column order from the database properties
+    first_row_properties = data['results'][0]['properties']
+    # column_order = list(first_row_properties.keys())  # Get the original column order from Notion
+    column_order = list(first_row_properties.keys())[::-1]
+
+    # Dynamically get column names from the database
+    all_columns = {col_name: [] for col_name in column_order}  # Initialize columns in the correct order
     
-    for i, row in enumerate(data['results']):
+    for row in data['results']:
         properties = row['properties']
         
-        # Extract values from Notion properties
-        precision = properties['Precision']['rich_text'][0]['text']['content'] if properties['Precision']['rich_text'] else "N/A"
-        recall = properties['Recall']['rich_text'][0]['text']['content'] if properties['Recall']['rich_text'] else "N/A"
-        f1 = properties['F1']['rich_text'][0]['text']['content'] if properties['F1']['rich_text'] else "N/A"
-        auc = properties['AUC']['rich_text'][0]['text']['content'] if properties['AUC']['rich_text'] else "N/A"
-        remarks = properties['Remarks']['rich_text'][0]['text']['content'] if properties['Remarks']['rich_text'] else "N/A"
-        
-        # Generate random status, priority, and date (or you can extract them from Notion)
-        status = random.choice(["Open", "In Progress", "Closed"])
-        priority = random.choice(["High", "Medium", "Low"])
-        date_submitted = datetime.date(2023, 6, 1) + datetime.timedelta(days=random.randint(0, 182))
-        
-        # Append the data into respective lists
-        ids.append(f"TICKET-{1100 - i}")
-        precisions.append(precision)
-        recalls.append(recall)
-        f1_scores.append(f1)
-        aucs.append(auc)
-        remarks_list.append(remarks)
-        statuses.append(status)
-        priorities.append(priority)
-        dates_submitted.append(date_submitted)
+        for col_name in column_order:
+            col_value = properties[col_name]
+            
+            # Depending on the type of the property, retrieve the appropriate data
+            if col_value['type'] == 'rich_text':
+                all_columns[col_name].append(col_value['rich_text'][0]['text']['content'] if col_value['rich_text'] else "N/A")
+            elif col_value['type'] == 'number':
+                all_columns[col_name].append(col_value['number'] if col_value['number'] is not None else "N/A")
+            elif col_value['type'] == 'select':
+                all_columns[col_name].append(col_value['select']['name'] if col_value['select'] else "N/A")
+            elif col_value['type'] == 'multi_select':
+                all_columns[col_name].append(", ".join([opt['name'] for opt in col_value['multi_select']]) if col_value['multi_select'] else "N/A")
+            elif col_value['type'] == 'title':
+                all_columns[col_name].append(col_value['title'][0]['text']['content'] if col_value['title'] else "N/A")
+            elif col_value['type'] == 'date':
+                all_columns[col_name].append(col_value['date']['start'] if col_value['date'] else "N/A")
+            elif col_value['type'] == 'checkbox':
+                all_columns[col_name].append(col_value['checkbox'])
+            else:
+                all_columns[col_name].append("N/A")
 
-    # Create the data dictionary with each metric in its own column
-    data = {
-        "ID": ids,
-        "Precision": precisions,
-        "Recall": recalls,
-        "F1": f1_scores,
-        "AUC": aucs,
-        "Remarks": remarks_list,
-        "Status": statuses,
-        "Priority": priorities,
-        "Date Submitted": dates_submitted,
-    }
+    # Create a DataFrame from the extracted data, maintaining the correct column order
+    df = pd.DataFrame(all_columns, columns=column_order)
 
-    # Convert the data into a pandas DataFrame
-    df = pd.DataFrame(data)
-
-    # Store the DataFrame in the session state for persistence
+    # Store the dataframe in the session state
     st.session_state.df = df
     logging.info("Data retrieved and formatted successfully.")
 else:
@@ -93,35 +75,18 @@ st.title("Model Dataset Dashboard")
 
 # Show the existing dataset in a table with `st.data_editor`
 if "df" in st.session_state:
-    st.header("Existing Model Dataset")
-    st.write(f"Number of logs: `{len(st.session_state.df)}`")
+    st.header("Editable Dataset")
 
-    # Show the DataFrame and allow editing for 'Status' and 'Priority' columns
+    # Show the editable DataFrame and allow editing
     edited_df = st.data_editor(
         st.session_state.df,
         use_container_width=True,
         hide_index=True,
-        column_config={
-            "Status": st.column_config.SelectboxColumn(
-                "Status",
-                help="Ticket status",
-                options=["Open", "In Progress", "Closed"],
-                required=True,
-            ),
-            "Priority": st.column_config.SelectboxColumn(
-                "Priority",
-                help="Priority",
-                options=["High", "Medium", "Low"],
-                required=True,
-            ),
-        },
-        # Disable editing for the "ID" and "Date Submitted" columns
-        disabled=["ID", "Date Submitted"],
     )
 
-    # Store the edited DataFrame in session state for persistence
+    # Update the session state with the edited data
     st.session_state.edited_df = edited_df
 
-    # Display the edited DataFrame below the table
-    # st.subheader("Edited Data")
-    # st.write(st.session_state.edited_df)
+    # Show only the edited DataFrame
+    st.subheader("Edited Data")
+    st.write(edited_df)
