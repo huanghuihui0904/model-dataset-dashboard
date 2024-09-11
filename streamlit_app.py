@@ -89,12 +89,12 @@ if page == "Homepage":
     st.write("This is the homepage of the dashboard, where you can explore different datasets and visualizations.")
     
     # Add more homepage content (e.g., introductory text, links, etc.)
-    st.markdown("""
-    ### Key Features
-    - Explore datasets.
-    - Analyze data trends.
-    - View results and insights.
-    """)
+    # st.markdown("""
+    # ### Key Features
+    # - Explore datasets.
+    # - Analyze data trends.
+    # - View results and insights.
+    # """)
 
 # Dataset page content
 elif page == "Dataset":
