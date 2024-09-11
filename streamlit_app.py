@@ -70,7 +70,7 @@ if response.status_code == 200:
     # Create the data dictionary
     data = {
         "ID": ids,
-        "Issue": issues,
+        # "Issue": issues,
         "Status": statuses,
         "Priority": priorities,
         "Date Submitted": dates_submitted,
