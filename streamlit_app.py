@@ -106,6 +106,17 @@ elif page == "Dataset":
     if "df" in st.session_state:
         st.header("Dataset")
 
+        # Highlight the total number of logs (rows) in light blue only for the number
+        total_logs = len(st.session_state.df)
+        st.markdown(
+            f"""
+            <div style="font-size: 20px;">
+                Total Number of Logs: <span style="color: #007BFF; background-color: #e0f7fa; padding: 5px 10px; border-radius: 5px;">{total_logs}</span>
+            </div>
+            """, 
+            unsafe_allow_html=True
+        )
+        
         # Define default columns to show
         default_columns = ['Index', 'Data', 'Name', 'Settings', 'F1', 'F0.3', 'Precision', 'Recall']
 
