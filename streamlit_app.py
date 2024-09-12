@@ -74,6 +74,9 @@ st.set_page_config(page_title="Model Dataset Dashboard", page_icon="govtech-icon
 # Sidebar navigation
 page = st.sidebar.selectbox("Select a page", ["Homepage", "Dataset"])
 
+
+
+
 # Homepage content
 if page == "Homepage":
     col1, col2 = st.columns(2)
@@ -103,9 +106,22 @@ elif page == "Dataset":
     if "df" in st.session_state:
         st.header("Dataset")
 
-        # Show the editable DataFrame and allow editing
+        # Define default columns to show
+        default_columns = ['Index', 'Data', 'Name', 'Settings', 'F1', 'F0.3', 'Precision', 'Recall']
+
+        # Allow the user to select which columns to display, default to your specified columns
+        selected_columns = st.multiselect(
+            "Select columns to display",
+            options=st.session_state.df.columns.tolist(),
+            default=[col for col in default_columns if col in st.session_state.df.columns]  # Only keep valid columns
+        )
+
+        # Show only the selected columns
+        filtered_df = st.session_state.df[selected_columns]
+
+        # Show the editable DataFrame with only the selected columns
         edited_df = st.data_editor(
-            st.session_state.df,
+            filtered_df,
             use_container_width=True,
             hide_index=True,
         )
@@ -116,3 +132,4 @@ elif page == "Dataset":
         # Optionally show edited data
         # st.subheader("Edited Data")
         # st.write(edited_df)
+
