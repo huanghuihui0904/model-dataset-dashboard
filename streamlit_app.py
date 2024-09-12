@@ -106,7 +106,11 @@ elif page == "Dataset":
     if "df" in st.session_state:
         st.header("Dataset")
 
-        # Highlight the total number of logs (rows) in light blue only for the number
+        # # Add an ID column if it doesn't already exist (optional, for tracking purposes)
+        # if 'ID' not in st.session_state.df.columns:
+        #     st.session_state.df.insert(0, 'ID', range(1, len(st.session_state.df) + 1))
+
+        # Highlight the total number of logs (rows)
         total_logs = len(st.session_state.df)
         st.markdown(
             f"""
@@ -116,8 +120,12 @@ elif page == "Dataset":
             """, 
             unsafe_allow_html=True
         )
-        
-        # Define default columns to show
+
+        # Reset the Pandas internal index to start from 1 instead of 0
+        st.session_state.df = st.session_state.df.reset_index(drop=True)  # Drop the original index
+        st.session_state.df.index += 1  # Start index from 1
+
+        # Define default columns to show (including Pandas internal index, if desired)
         default_columns = ['Index', 'Data', 'Name', 'Settings', 'F1', 'F0.3', 'Precision', 'Recall']
 
         # Allow the user to select which columns to display, default to your specified columns
@@ -130,11 +138,11 @@ elif page == "Dataset":
         # Show only the selected columns
         filtered_df = st.session_state.df[selected_columns]
 
-        # Show the editable DataFrame with only the selected columns
+        # Show the editable DataFrame with Pandas internal index visible and sorted by index
         edited_df = st.data_editor(
             filtered_df,
             use_container_width=True,
-            hide_index=True,
+            hide_index=False  # Show the Pandas internal index (row numbers)
         )
 
         # Update the session state with the edited data
