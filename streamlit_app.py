@@ -19,9 +19,16 @@ headers = {
     "Notion-Version": "2022-06-28",
     "Content-Type": "application/json"
 }
-
+filter_data =  {
+  "filter": {
+    "property": "Training data path",
+    "rich_text": {
+      "is_not_empty": True
+    }
+  }
+}
 # Make a POST request to query the database
-response = requests.post(url, headers=headers)
+response = requests.post(url, headers=headers, json=filter_data)
 
 # Check the response status and process the results
 if response.status_code == 200:
