@@ -111,7 +111,7 @@ elif page == "Model - Dataset":
     st.title("Model - Dataset")
 
     if "df" in st.session_state:
-        st.header("Model - Dataset")
+        # st.header("Model - Dataset")
 
         # # Add an ID column if it doesn't already exist (optional, for tracking purposes)
         # if 'ID' not in st.session_state.df.columns:
