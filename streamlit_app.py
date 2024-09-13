@@ -76,10 +76,10 @@ else:
     st.write(f"Failed to retrieve data: {response.status_code}, {response.text}")
 
 # Set up page configuration
-st.set_page_config(page_title="Model Dataset Dashboard", page_icon="govtech-icon.png")
+st.set_page_config(page_title="Model & Dataset Dashboard", page_icon="govtech-icon.png")
 
 # Sidebar navigation
-page = st.sidebar.selectbox("Select a page", ["Homepage", "Dataset"])
+page = st.sidebar.selectbox("Select a page", ["Homepage", "Model - Dataset"])
 
 
 
@@ -107,11 +107,11 @@ if page == "Homepage":
     # """)
 
 # Dataset page content
-elif page == "Dataset":
-    st.title("Model Dataset")
+elif page == "Model - Dataset":
+    st.title("Model - Dataset")
 
     if "df" in st.session_state:
-        st.header("Dataset")
+        st.header("Model - Dataset")
 
         # # Add an ID column if it doesn't already exist (optional, for tracking purposes)
         # if 'ID' not in st.session_state.df.columns:
