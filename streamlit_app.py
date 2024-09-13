@@ -8,7 +8,7 @@ import json
 
 # Set up your API key and database ID
 NOTION_API_KEY = "secret_Jz7xY1y67hkSdP7KXRw5cd4P6CLPXa9lHaZ7kUUF6Fb"
-DATABASE_ID = "95d59953596a4574b5817f0300e9310f"
+DATABASE_ID = "100405e87d9a800997ace1eee578c2b3"
 
 # Set up the API URL to query the database
 url = f"https://api.notion.com/v1/databases/{DATABASE_ID}/query"
